@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gate In Input</title>
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[type="text"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+input[type="date"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px;
+  text-align: center;
+  text-transform: uppercase;
+  }
+  
+  .submit-btn {
+  width: 100%;
+  max-width: 400px;
+  height: 48px;
+  padding: 0 20px;
+  
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent; 
+}
+
+.submit-btn:active {
+  background-color: #0056b3;
+  transform: scale(0.98);
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+</style>
+</head>
+
+<body>
+<p id=testText></p>
+<h1>NHẬP GATE IN</h1>
+<form>
+<label for="contId" style="font-weight:bold;">NHẬP SỐ CONTAINER</label>
+<input type="text" id="contId" name="contId" placeholder="APZU1234567" maxlength="11" minlength="11" required />
+<br>
+<label for="inBl" style="font-weight:bold;">NHẬP SỐ B/L</label>
+<input type="text" id="inBl" name="inBl" required />
+<br>
+<label for="shippingLine" style="font-weight:bold;">CHỌN HÃNG TÀU</label>
+<div>
+<input type="radio" id="CMA" name="line"/><label>CMA</label>
+<input type="radio" id="MAE" name="line"/><label>MAE</lable>
+<input type="radio" id="ONE" name="line"/><label>ONE</lable>
+<input type="radio" id="PIL" name="line"/><label>PIL</lable><br><br>
+<input type="radio" id="SIT" name="line"/><label>SITC</lable>
+<input type="radio" id="HMM" name="line"/><label>HMM</lable>
+<input type="radio" id="MSC" name="line"/><label>MSC</lable>
+<input type="radio" id="GUI" name="line"/><label>GỬI</lable>
+</div>
+<br>
+<label for="sizeType" style="font-weight:bold;">CHỌN SIZE/TYPE</label>
+<div>
+<input type="radio" id="20dc" name="sizeType"/><label>20DC</label>
+<input type="radio" id="40dc" name="sizeType"/><label>40DC</lable>
+<input type="radio" id="40hc" name="sizeType" checked/><label>40HC</lable>
+</div>
+<br>
+<label for="inDet" style="font-weight:bold;">HẠN RỖNG</label>
+<input type="date" name="inDet" id="inDet"/>
+<br>
+<label for="inCus" style="font-weight:bold;">NHẬP KHÁCH HÀNG</label>
+<input type="text" id="inCus" name="inCus" />
+<br>
+<label for="inRemark" style="font-weight:bold;">NHẬP GHI CHÚ</label>
+<input type="text" id="inRemark" name="inRemark" /><br>
+<input type="submit" class="submit-btn" value="GỬI"><br>
+<button class="submit-btn">QUAY LẠI</button>
+</form>
+<script>
+  //Code test
+  //document.getElementById("testText").innerHTML = today;
+  //Code kiểm tra số cont
+  function validateISO6346(contId) { 
+    if (!/^[A-Z]{3}U\d{7}$/.test(contId)) {
+      return false;
+    }
+ 
+    const charCode = {
+    A:10, B:12, C:13, D:14, E:15, F:16, G:17, H:18, I:19,
+    J:20, K:21, L:23, M:24, N:25, O:26, P:27, Q:28, R:29,
+    S:30, T:31, U:32, V:34, W:35, X:36, Y:37, Z:38
+    };
+ 
+    let sum = 0;
+ 
+    for (let i = 0; i < 10; i++) {
+    let currentChar = contId[i];
+    let val = i < 4
+    ? charCode[currentChar]
+    : parseInt(currentChar, 10);
+     
+    sum += val * Math.pow(2, i);
+    }
+ 
+    let checkDigit = sum % 11;
+ 
+    if (checkDigit === 10) {
+    checkDigit = 0;
+    }
+ 
+    return checkDigit === parseInt(contId[10], 10);
+}
+ 
+document.getElementById("contId").addEventListener("input", function () {
+ 
+  this.value = this.value.toUpperCase();
+ 
+  if (this.value.length === 11) {
+    let isValid = validateISO6346(this.value);
+    if (!isValid) { alert("Container không hợp lệ"); }
+  }
+});
+// Code giới hạn ngày DET
+const date = new Date();
+const year = date.getFullYear();
+const month = String(date.getMonth() + 1).padStart(2, '0');
+const day = String(date.getDate()).padStart(2, '0');
+
+const today = `${year}-${month}-${day}`;
+
+document.getElementById('inDet').setAttribute('min', today);
+</script>
+</body>
+</html>
